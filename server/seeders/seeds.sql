@@ -1,2 +1,0 @@
-CREATE DATABASE custom_auth_tutorial_db;
-USE custom_auth_tutorial_db;

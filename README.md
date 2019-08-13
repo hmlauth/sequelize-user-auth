@@ -1,2 +1,2 @@
-# custom-user-auth
-Custom user authentication with Express, Sequelize, and Bcrypt (Resource: https://medium.com/@jgrisafe/custom-user-authentication-with-express-sequelize-and-bcrypt-667c4c0edef5)
+Basics of Authentication using Passport and JWT with Sequelize and MySQL Database (Resource: 
+https://medium.com/devc-kano/basics-of-authentication-using-passport-and-jwt-with-sequelize-and-mysql-database-748e09d01bab )
