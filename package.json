@@ -1,0 +1,32 @@
+{
+  "name": "sequelize-user-auth",
+  "version": "1.0.0",
+  "description": "Basics of Authentication using Passport and JWT with Sequelize and MySQL Database (Resource:  https://medium.com/devc-kano/basics-of-authentication-using-passport-and-jwt-with-sequelize-and-mysql-database-748e09d01bab )",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmlauth/custom-user-auth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hmlauth/custom-user-auth/issues"
+  },
+  "homepage": "https://github.com/hmlauth/custom-user-auth#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^1.6.5",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "path": "^0.12.7",
+    "sequelize": "^5.14.0"
+  }
+}
