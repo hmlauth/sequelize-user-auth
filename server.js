@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const userRoutes = require('./routes/userRoutes');
 const PORT = process.env.PORT || 3000;
-const {passport} = require('./passport');
 
 // MIDDLEWARE
 app.use(bodyParser.json());
