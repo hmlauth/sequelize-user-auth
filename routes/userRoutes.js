@@ -1,26 +1,26 @@
+const router = require('express').Router();
+const { Authenticated, NotAuthenticated } = require('../auth/auth');
+const { testIt, getUsers, register, login, logout, authorized } = require('../controllers/userController');
 const db = require("../models");
-let { userController } = require('../controller');
 
-module.exports = (app) => {
-    
-    app.get('/', function(req, res) {
-        res.json({ message: 'Express is up!' });
-    });
+// Matches '/users':
 
-    app.post('/register', (req, res) => { 
-        const { name, password } = req.body;
-        db.User.create({name, password})
-        .then(dbUser => res.json( {dbUser, msg: 'Registration successful!'} ))
-    });
+  router.route('/')
+    .get(testIt)
 
-    app.get('/users', (req, res) => {
-        db.User.findAll()
-        .then(dbUsers => res.json(dbUsers))
-    })
+  router.route('/all', Authenticated)
+    .get(getUsers)
 
-    app.post('/login', async (req, res) => {
-        const { name, password } = req.body;
-        
-    })
+  router.route('/register', NotAuthenticated)
+    .post(register)
 
-}
+  router.route('/login', NotAuthenticated)
+    .post(login)
+
+  router.route('/logout', Authenticated)
+    .delete(logout)
+
+  router.route('/authorized')
+    .get(authorized)
+
+module.exports = router;
