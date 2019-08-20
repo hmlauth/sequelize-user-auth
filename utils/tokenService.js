@@ -20,6 +20,7 @@ module.exports = {
     try {
       console.log(token)
       let decoded = await jwt.verify(token, SECRET);
+      console.log('decoded'.info, decoded);
       return decoded;
     } catch (err) {
       if (err) throw err;

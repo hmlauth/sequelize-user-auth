@@ -1,7 +1,6 @@
 const uuid = require('uuid/v4');
 const colors = require('../utils/colors');
 const { Users } = require("../models");
-let { getUser } = require('../helperFunctions/helperFunctions.js');
 const { hashPassword, checkPassword } = require('../utils/passwordService');
 const { createToken, isValidToken } = require('../utils/tokenService');
 const cookieOptions = {
@@ -55,7 +54,7 @@ module.exports = {
       res
         .cookie('token', token, cookieOptions)
         .status(200)
-        .redirect('/users/all');
+        .redirect('/users/authorized');
 
     } catch (err) {
       if (err) throw err;
@@ -63,32 +62,31 @@ module.exports = {
   },
 
   async login(req, res) {
-    console.log('you hit the login route', req.body);
+    console.log('you hit the login route\n'.info, req.body);
     const { username, password } = req.body;
     try {
-      console.log(Users);
-      Users.findAll({where: {username}})
-      .then(async dbUser => {
-        console.log('dbUser'.verbose, dbUser);
 
-        if (dbUser) {
+      Users.findOne({where: {username}})
+        .then(async dbUser => {
+          console.log('dbUser\n'.info, dbUser)
+          if (dbUser) {
 
-          let isMatch = await checkPassword(password, dbUser.hashedPassword);
-          console.log('isMatch'.verbose, isMatch);
+            let isMatch = await checkPassword(password, dbUser.hashPassword);
+            console.log('isMatch'.verbose, isMatch);
 
-          let token = await createToken(dbUser);
-          console.log('token'.verbose, token);
+            let token = await createToken(dbUser);
+            console.log('token'.verbose, token);
 
-          res.cookie('token', token, cookieOptions);
+            res.cookie('token', token, cookieOptions);
 
-          if (isMatch) {
-            res.status(200).redirect('/users/authorized');
+            if (isMatch) {
+              res.status(200).redirect('/users/authorized');
+            } else {
+              res.send('sorry password did not match');
+            }
           } else {
-            res.send('sorry password did not match');
+            res.send('sorry username does not match');
           }
-        } else {
-          res.send('sorry username does not match');
-        }
       })
     } catch (err) {
       if (err) throw err;
@@ -96,9 +94,11 @@ module.exports = {
   },
 
   async logout(req, res) {
-    console.logout('you hit the logout in route');
+    console.log('you hit the logout in route');
     try {
-      res.clearCookie('token').redirect('/users/all');
+      res
+        .clearCookie('token')
+        .redirect('/users/all');
     } catch (err) {
       if (err) throw err;
     }
@@ -108,16 +108,20 @@ module.exports = {
     const { token } = req.signedCookies;
     if (token) {
       try {
-        let {user: { username, hashedPassword }} = await isValidToken(token);
-      let user = Users.find(user => user.username === username);
-      res.send({username: user.username, password: hashedPassword});
+        let {user: { username, hashPassword }} = await isValidToken(token);
+        Users.findOne({where: {username}})
+          .then(dbUser =>
+            res.send({
+              username: user.username,
+              password: user.hashPassword
+            }))
       } catch (err) {
         if (err) throw err;
       }
     } else {
       res.send({ message: 'Sorry your token has expired.' });
     }
-  },
+  }, // how to test this function?
 
   async authorized(req, res) {
     res.send('users/authorized redirect hit')
