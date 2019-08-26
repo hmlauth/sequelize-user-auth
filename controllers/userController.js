@@ -51,6 +51,8 @@ module.exports = {
       let token = await createToken(newUser);
       console.log('token'.silly, token);
 
+      // here we give cookie the name authExample, cookie is created with the jwt token
+      // token is stored in the cookie and it's just data. Cookie doesn't care what token is.
       res
         .cookie('token', token, cookieOptions)
         .status(200)
@@ -109,6 +111,7 @@ module.exports = {
     if (token) {
       try {
         let {user: { username, hashPassword }} = await isValidToken(token);
+        console.log('\n *********** \n', Users, user, username, hashPassword )
         Users.findOne({where: {username}})
           .then(dbUser =>
             res.send({

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const { Users } = require('../models');
 const { SECRET } = process.env;
 const colors = require('../utils/colors');
 const altWrap = function(fn) {
@@ -17,18 +17,19 @@ const altWrap = function(fn) {
 const Authenticator = altWrap(async (req, res, next) => {
   console.log('\nInside Authenticator!\n'.verbose)
   console.log('req.signedCookies'.verbose, req.signedCookies);
+  // cookie has name already and in this case the name of the cookie is authExample
+  let { token } = req.signedCookies;
+  console.log('token'.verbose, token);
 
-  let { authExample } = req.signedCookies;
-  console.log('authExample'.verbose, authExample);
   //
   // don't allow spoofing :)
   //
 
   req.userId = null;
 
-  if (authExample && Object.keys(authExample).length > 0) {
-    let { username, password, hashedPassword } = jwt.verify(authExample, SECRET).user;
-    let user = User.findOne(dbUser => dbUser.username === username);
+  if (token && Object.keys(token).length > 0) {
+    let { username, password, hashPassword } = jwt.verify(token, SECRET).user;
+    let user = Users.findOne({where: {username}});
     let isMatched;
 
     if(!user) {
@@ -36,7 +37,7 @@ const Authenticator = altWrap(async (req, res, next) => {
       // return res.send(404);
     }
 
-    isMatched = await bcrypt.compare(password, hashedPassword);
+    isMatched = await bcrypt.compare(password, hashPassword);
 
     if (!isMatched) {
       return res.status(404).send('user not found');

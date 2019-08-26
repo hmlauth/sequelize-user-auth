@@ -10,7 +10,7 @@ const { SECRET, PORT } = process.env;
 const Authenticator = require('./auth/auth.js').Authenticator;
 const db = require('./models'); // required for sequelize db connection
 
-config({ debug: process.env.DEBUG }); // what does this object do in config?
+config({ debug: process.env.DEBUG }); // what does this object do in config? Enabbles some 
 
 // MIDDLEWARE
 app.use(logger('dev'));
